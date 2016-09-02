@@ -1,0 +1,26 @@
+{
+  "name": "mpsse-ftdi",
+  "version": "1.0.0",
+  "description": "Module providing simplified functions to use some FTDI's MPSSE modes",
+  "main": "index.js",
+  "dependencies": {
+    "ftdi": "^1.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bdrr77/mpsse-ftdi.git"
+  },
+  "keywords": [
+    "mpsse",
+    "ftdi"
+  ],
+  "author": "Brian RODRIGUES <bdrr77@gmail.com> (https://github.com/bdrr77)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bdrr77/mpsse-ftdi/issues"
+  },
+  "homepage": "https://github.com/bdrr77/mpsse-ftdi#readme"
+}
