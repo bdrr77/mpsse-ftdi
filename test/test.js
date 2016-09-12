@@ -3,15 +3,6 @@ var ftdiMpsse = require('../index');
 var deviceA;
 var deviceB;
 
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
-
 ftdiMpsse.find(0x0403, 0x6010, function(err, devices) {
   if(devices.length == 0)
   {
@@ -26,11 +17,7 @@ ftdiMpsse.find(0x0403, 0x6010, function(err, devices) {
 	//deviceA.GPIO_Write('MPSSE_CMD_SET_DATA_BITS_HIGHBYTE',0x0F,0xFF);
 	deviceA.SPI_Init(12000000,0,0,0, function() {
 		console.log("Init done");
-		deviceA.SPI_CSEnable();
-		deviceA.SPI_Transfer([0x55,0x00],2, function(error, rxData){
-				console.log("fucking data is ");
-				console.log(rxData);
-		});
+		main();
 	});
 
 	//deviceA.SPI_CSEnable();
@@ -51,6 +38,17 @@ ftdiMpsse.find(0x0403, 0x6010, function(err, devices) {
   }
 });
 
+function main(){
+	var test =  new Array(100).fill(0);
+
+
+	deviceA.SPI_CSEnable();
+		deviceA.SPI_Transfer(test,100, function(error, rxData){
+			console.log("fucking data is ");
+			console.log(rxData);
+	});
+}
+
 process.on('SIGINT', function() {
     console.log("Caught interrupt signal");
 
@@ -62,9 +60,3 @@ process.on('SIGINT', function() {
     
     process.exit(1);
 });
-
-function transfer()
-{ 
-	deviceA.SPI_Transfer(); 
-	setTimeout( transfer, 500);
-}

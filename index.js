@@ -97,8 +97,8 @@ var FtdiMpsse = function (device) {
           bitmode: 'mpsse',
           bitmask: 0xFB    
         });
-        console.log("Connected to " + this.device.deviceSettings.description + " in MPSSE mode");
-        sleep(1000);
+        //console.log("Connected to " + this.device.deviceSettings.description + " in MPSSE mode");
+        sleep(50);
 };
 
 //Added methods 
@@ -106,7 +106,7 @@ FtdiMpsse.prototype.SPI_Init = function(frequency, CPHA, CPOL, CS, callback)//TO
 {
   var self = this.device;
   var tckSkDivisor;
-  console.log("Ftdi mpsse SPI_Init ");
+  //console.log("Ftdi mpsse SPI_Init ");
 
   //Clock divisor determination
   tckSkDivisor = (defines['MAX_CLOCK_RATE'] / (2 * frequency)) - 1;
@@ -115,7 +115,6 @@ FtdiMpsse.prototype.SPI_Init = function(frequency, CPHA, CPOL, CS, callback)//TO
     tckSkDivisor = 0xFFFF;
   }
     
-  console.log("CK div = " + tckSkDivisor);
   //Clocking configuration
   self.write( [
                 defines['MPSSE_CMD_DISABLE_CLOCK_DIVIDE_BY_5'],//Master clock set to 60 MHz
@@ -137,9 +136,6 @@ FtdiMpsse.prototype.SPI_Init = function(frequency, CPHA, CPOL, CS, callback)//TO
   //TCK/TDI/TDO IO configuration
   this.GPIO_Write('MPSSE_CMD_SET_DATA_BITS_LOWBYTE',0x08,0x0B);
 
-  //sleep(1000);
-  console.log((tckSkDivisor & 0xFF));
-  console.log((tckSkDivisor >> 8));
   //SK Clock frequency configuration
   self.write( [
                 defines['MPSSE_CMD_SET_TCK_SK_DIVISOR'],
@@ -181,21 +177,21 @@ FtdiMpsse.prototype.SPI_Init = function(frequency, CPHA, CPOL, CS, callback)//TO
 FtdiMpsse.prototype.SPI_CSEnable = function()
 {
   var self = this.device;
-  console.log("Ftdi mpsse SPI_CSEnable ");
+  //console.log("Ftdi mpsse SPI_CSEnable ");
   this.GPIO_Write('MPSSE_CMD_SET_DATA_BITS_LOWBYTE',0x00,0x0B);
 };
 
 FtdiMpsse.prototype.SPI_CSDisable = function()
 {
   var self = this.device;
-  console.log("Ftdi mpsse SPI_CSDisable");
+  //console.log("Ftdi mpsse SPI_CSDisable");
   this.GPIO_Write('MPSSE_CMD_SET_DATA_BITS_LOWBYTE',0x08,0x0B);
 };
 
 FtdiMpsse.prototype.GPIO_Read = function()
 {
   var self = this.device;
-  console.log("Reading " + self.deviceSettings.description);
+  //console.log("Reading " + self.deviceSettings.description);
   self.write( [
                 defines['MPSSE_CMD_GET_DATA_BITS_LOWBYTE'],
                 defines['MPSSE_CMD_GET_DATA_BITS_HIGHBYTE']
@@ -223,15 +219,13 @@ FtdiMpsse.prototype.SPI_Transfer = function(txBuffer,txSize,rxCallback)
   if((txBuffer) && (txSize <= 65536) && (txBuffer.length == txSize)){
     
     //this.SPI_CSEnable();
-    console.log("Sending data over " + self.deviceSettings.description);
+    //console.log("Sending data over " + self.deviceSettings.description);
     bufferHeader = [
                     defines['MPSSE_CMD_DATA_BYTES_IN_POS_OUT_NEG_EDGE'],
                     (finalTxSize & 0x00FF),//0x01,//Length LOW
                     ((finalTxSize & 0xFF00) >> 8),//Length HIGH
                   ];
     bufferHeader = bufferHeader.concat(txBuffer);
-
-    console.log(bufferHeader);
 
     self.write( bufferHeader, 
       function(err) {
@@ -254,7 +248,7 @@ FtdiMpsse.prototype.SPI_Transfer = function(txBuffer,txSize,rxCallback)
 FtdiMpsse.prototype.GPIO_Write = function(busCommand,state,mask)
 {
   var self = this.device;
-  console.log("Writing to " + self.deviceSettings.description);
+  //console.log("Writing to " + self.deviceSettings.description);
 
   if( (busCommand != 'MPSSE_CMD_SET_DATA_BITS_LOWBYTE')  &&  (busCommand != 'MPSSE_CMD_SET_DATA_BITS_HIGHBYTE') )
   {
