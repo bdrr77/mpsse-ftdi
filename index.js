@@ -216,7 +216,11 @@ FtdiMpsse.prototype.SPI_Transfer = function(txBuffer,txSize,rxCallback)
   var finalTxSize = txSize - 1;
   var bufferHeader;
 
-  if((txBuffer) && (txSize <= 65536) && (txBuffer.length == txSize)){
+  if(txBuffer == null){
+    txBuffer = new Array(txSize).fill(0x00);
+  }
+
+  if ((txSize <= 65536) || (txSize == 0))  {
     
     //this.SPI_CSEnable();
     //console.log("Sending data over " + self.deviceSettings.description);

@@ -17,13 +17,12 @@ ftdiMpsse.find(0x0403, 0x6010, function(err, devices) {
 	//deviceA.GPIO_Write('MPSSE_CMD_SET_DATA_BITS_HIGHBYTE',0x0F,0xFF);
 	deviceA.SPI_Init(12000000,0,0,0, function() {
 		console.log("Init done");
+		deviceA.SPI_Transfer(null,4, null);//app specific
 		main();
 	});
-
 	//deviceA.SPI_CSEnable();
 	//deviceA.SPI_CSDisable();
 	//deviceA.GPIO_Read();
-
 	
 	//setTimeout( transfer, 500);
 
@@ -38,25 +37,50 @@ ftdiMpsse.find(0x0403, 0x6010, function(err, devices) {
   }
 });
 
+
 function main(){
-	var test =  new Array(100).fill(0);
-
-
-	deviceA.SPI_CSEnable();
-		deviceA.SPI_Transfer(test,100, function(error, rxData){
+	/*for(var i=0;i<test.length;i++){
+		test[i] = i+2;
+	}*/
+	//deviceA.SPI_CSEnable();
+	//console.log("call1 " + process.hrtime());
+	deviceA.SPI_Transfer(null,65520, function(error, rxData){
 			console.log("fucking data is ");
 			console.log(rxData);
+			//endProgram();
 	});
+
+	deviceA.SPI_Transfer(null,65520, function(error, rxData){
+			console.log("fucking data is ");
+			console.log(rxData);
+			//endProgram();
+	});
+
+	deviceA.SPI_Transfer(null,65520, function(error, rxData){
+			console.log("fucking data is ");
+			console.log(rxData);
+			//endProgram();
+	});
+
+	deviceA.SPI_Transfer(null,65520, function(error, rxData){
+			console.log("fucking data is ");
+			console.log(rxData);
+			endProgram();
+	});
+
 }
 
 process.on('SIGINT', function() {
     console.log("Caught interrupt signal");
+    endProgram();
+});
 
-    if(deviceA !== undefined)
+function endProgram(){
+	if(deviceA !== undefined)
     	deviceA.close();
 
     if(deviceB !== undefined)
     	deviceB.close();
     
     process.exit(1);
-});
+} 
